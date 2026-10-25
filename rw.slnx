@@ -19,6 +19,7 @@
   </Folder>
   <Folder Name="/tests/">
     <File Path="tests/.editorconfig" />
+    <Project Path="tests/GuidMaker.Tests/GuidMaker.Tests.csproj" />
     <Project Path="tests/HelloWorld.Tests/HelloWorld.Tests.csproj" />
     <Project Path="tests/Rw.Tests/Rw.Tests.csproj" />
     <Project Path="tests/Uninstall.Tests/Uninstall.Tests.csproj" />
