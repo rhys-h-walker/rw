@@ -24,6 +24,7 @@
     <Project Path="tests/Uninstall.Tests/Uninstall.Tests.csproj" />
   </Folder>
   <Folder Name="/tools/">
+    <Project Path="tools/GuidMaker/GuidMaker.csproj" />
     <Project Path="tools/HelloWorld/HelloWorld.csproj" />
     <Project Path="tools/ImageConvert/ImageConvert.csproj" />
     <Project Path="tools/Uninstall/Uninstall.csproj" />

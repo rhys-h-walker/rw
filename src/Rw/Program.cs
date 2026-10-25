@@ -1,5 +1,6 @@
 ﻿using System.CommandLine;
 using HelloWorld;
+using GuidMaker;
 using Rw.Core.Interfaces;
 using Rw.Core.IO;
 using Rw.Core.Processes;
@@ -14,6 +15,7 @@ foreach (var tool in new IRwTool[]
 {
     new HelloWorldTool(),
     new UninstallTool(processRunner, fileSystem, MsiProductLocators.ForCurrentOs()),
+    new GuidMakerTool(),
 })
 {
     root.Add(tool.CreateCommand());
