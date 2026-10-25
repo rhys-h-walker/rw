@@ -4,6 +4,7 @@
     <File Path="Directory.Build.props" />
     <File Path="Directory.Packages.props" />
   </Folder>
+  <Folder Name="/installer/" />
   <Folder Name="/installer/linux/">
     <File Path="installer/linux/build-deb.sh" />
     <File Path="installer/linux/control.template" />
@@ -17,10 +18,13 @@
     <Project Path="src/Rw/Rw.csproj" />
   </Folder>
   <Folder Name="/tests/">
+    <File Path="tests/.editorconfig" />
     <Project Path="tests/Rw.Tests/Rw.Tests.csproj" />
+    <Project Path="tests/Uninstall.Tests/Uninstall.Tests.csproj" />
   </Folder>
   <Folder Name="/tools/">
     <Project Path="tools/HelloWorld/HelloWorld.csproj" />
     <Project Path="tools/ImageConvert/ImageConvert.csproj" />
+    <Project Path="tools/Uninstall/Uninstall.csproj" />
   </Folder>
 </Solution>

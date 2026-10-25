@@ -1,0 +1,3 @@
+[*.cs]
+# Tests are named MethodUnderTest_Situation_ExpectedResult
+dotnet_diagnostic.CA1707.severity = none

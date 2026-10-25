@@ -12,6 +12,7 @@
     <ProjectReference Include="..\Rw.Core\Rw.Core.csproj" />
     <ProjectReference Include="..\..\tools\HelloWorld\HelloWorld.csproj" />
     <ProjectReference Include="..\..\tools\ImageConvert\ImageConvert.csproj" />
+    <ProjectReference Include="..\..\tools\Uninstall\Uninstall.csproj" />
   </ItemGroup>
 
 </Project>
