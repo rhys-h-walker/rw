@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <AssemblyName>rw</AssemblyName>
+    <PublishSingleFile>true</PublishSingleFile>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <DebugType>embedded</DebugType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Rw.Core\Rw.Core.csproj" />
+    <ProjectReference Include="..\..\tools\HelloWorld\HelloWorld.csproj" />
+    <ProjectReference Include="..\..\tools\ImageConvert\ImageConvert.csproj" />
+  </ItemGroup>
+
+</Project>

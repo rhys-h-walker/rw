@@ -1,0 +1,26 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".gitignore" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+  </Folder>
+  <Folder Name="/installer/linux/">
+    <File Path="installer/linux/build-deb.sh" />
+    <File Path="installer/linux/control.template" />
+    <File Path="installer/linux/copyright" />
+  </Folder>
+  <Folder Name="/installer/windows/">
+    <File Path="installer/windows/Product.wxs" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/Rw.Core/Rw.Core.csproj" />
+    <Project Path="src/Rw/Rw.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Rw.Tests/Rw.Tests.csproj" />
+  </Folder>
+  <Folder Name="/tools/">
+    <Project Path="tools/HelloWorld/HelloWorld.csproj" />
+    <Project Path="tools/ImageConvert/ImageConvert.csproj" />
+  </Folder>
+</Solution>

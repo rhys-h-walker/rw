@@ -1,0 +1,9 @@
+Package: rw
+Version: @VERSION@
+Section: utils
+Priority: optional
+Architecture: amd64
+Maintainer: Rhys Walker
+Installed-Size: @SIZE@
+Description: Personal command toolkit
+ A single self-contained command, rw, that dispatches to several tools.
