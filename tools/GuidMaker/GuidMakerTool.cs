@@ -3,11 +3,19 @@ using Rw.Core.Extensions;
 using Rw.Core.Interfaces;
 using GuidMaker.Providors;
 using GuidMaker.Models;
+using Rw.Core.Generators;
 
 namespace GuidMaker
 {
     public sealed class GuidMakerTool : IRwTool
     {
+        private readonly IGuidGenerator _guidGenerator;
+
+        public GuidMakerTool(IGuidGenerator guidGenerator)
+        {
+            _guidGenerator = guidGenerator;
+        }
+
         public Command CreateCommand()
         {
             var command = new Command("guid-maker", "Generates some guids ready to copy into a project");
@@ -26,7 +34,7 @@ namespace GuidMaker
                     ListPreset = parseResult.GetValue(OptionsProvidor.listPresetOptions),
                 };
                 
-                return CommandOptionHandler.HandleCommandOptions(optionValues, parseResult);
+                return CommandOptionHandler.HandleCommandOptions(optionValues, parseResult, _guidGenerator);
             });
 
             return command;

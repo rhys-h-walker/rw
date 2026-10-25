@@ -6,7 +6,7 @@ namespace GuidMaker.Providors
 {
     public static class OptionsProvidor
     {
-        public static readonly Option<int> guidCountOption = new Option<int>("-n", "-count")
+        public static readonly Option<int> guidCountOption = new Option<int>("-n", "--count")
         {
             Description = "How many guids to generate",
             DefaultValueFactory = _ => 1,
@@ -26,13 +26,13 @@ namespace GuidMaker.Providors
 
         public static readonly Option<int> presetOption = new Option<int>("-p", "--preset")
         {
-            Description = "The preset to choose for the -b & -e tags, 0 means no preset",
+            Description = "The preset to choose for the -b & -e tags, 0 means no preset. SELECTING A PRESET OVERRIDES OTHER OPTIONS",
             DefaultValueFactory = _ => 0,
         };
 
         public static readonly Option<string> typeOption = new Option<string>("-t", "--type")
         {
-            Description = "Option to replace <ObjectName> if one is created by a preset",
+            Description = "Option to replace <ObjectName> if one is created by a PRESET",
         };
 
         public static readonly Option<bool> upperOption = new Option<bool>("--upper")

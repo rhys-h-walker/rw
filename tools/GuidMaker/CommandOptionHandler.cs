@@ -4,22 +4,14 @@ using Rw.Core.StaticValues;
 using Rw.Core.Extensions;
 using System.CommandLine;
 using System.Globalization;
+using Rw.Core.Interfaces;
+using Rw.Core.Generators;
 
 namespace GuidMaker
 {
-    public static class CommandOptionHandler
+    public class CommandOptionHandler
     {
-        private static readonly Func<string> lowerCaseGuidGenerator = () =>
-        {
-            return Guid.NewGuid().ToString().ToLowerInvariant();
-        };
-
-        private static readonly Func<string> upperCaseGuidGenerator = () =>
-        {
-            return Guid.NewGuid().ToString().ToUpperInvariant();
-        };
-
-        public static int HandleCommandOptions(GuidMakerOptionValues opts, ParseResult parseResult)
+        public static int HandleCommandOptions(GuidMakerOptionValues opts, ParseResult parseResult, IGuidGenerator guidGenerator)
         {
             // Early escape for ListPreset
             if (opts.ListPreset)
@@ -34,6 +26,9 @@ namespace GuidMaker
                 parseResult.InvocationConfiguration.Error.WriteLine("Cannot generate 0 or less Guids");
                 return ExitCodes.InvalidInput;
             }
+
+            Func<string> upperCaseGuidGenerator = () => { return guidGenerator.NewGuid().ToString().ToUpperInvariant(); };
+            Func<string> lowerCaseGuidGenerator = () => { return guidGenerator.NewGuid().ToString().ToLowerInvariant(); };
 
             var guids = opts.GuidCount.For((opts.Upper ? upperCaseGuidGenerator : lowerCaseGuidGenerator));
 
@@ -63,7 +58,7 @@ namespace GuidMaker
             // Attempt to apply type if it is present
             if (string.IsNullOrEmpty(opts.Type) == false)
             {
-                output = output.Replace(PresetsProvidor.TypeReplaceableString, output);
+                output = output.Replace(PresetsProvidor.TypeReplaceableString, opts.Type);
             }
 
             parseResult.InvocationConfiguration.Output.WriteLine(output);
