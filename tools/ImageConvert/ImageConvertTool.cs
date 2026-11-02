@@ -37,6 +37,12 @@ namespace ImageConvert
                     return ExitCodes.Success;
                 }
 
+                if (string.IsNullOrWhiteSpace(format))
+                {
+                    Error.WriteLine("Format was empty exiting");
+                    return ExitCodes.Failure;
+                }
+
                 if (FormatIsUnsupportedForWrites(format))
                 {
                     Error.WriteLine($"The format {format} is unsupported for writes");

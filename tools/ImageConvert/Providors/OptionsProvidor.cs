@@ -17,7 +17,7 @@ namespace ImageConvert.Providors
         public static readonly Option<string> formatOption = new Option<string>("-f", "--format")
         {
             Description = "The format to convert the images to, no default available",
-            Required = true
+            DefaultValueFactory = _ => ""
         };
 
         public static readonly Option<string> outputOption = new Option<string>("-o", "--output")
