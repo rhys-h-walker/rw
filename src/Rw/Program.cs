@@ -6,6 +6,7 @@ using Rw.Core.IO;
 using Rw.Core.Processes;
 using Uninstall;
 using Rw.Core.Generators;
+using ImageConvert;
 
 var processRunner = new ProcessRunner();
 var fileSystem = new PhysicalFileSystem();
@@ -17,6 +18,7 @@ foreach (var tool in new IRwTool[]
     new HelloWorldTool(),
     new UninstallTool(processRunner, fileSystem, MsiProductLocators.ForCurrentOs()),
     new GuidMakerTool(new GuidGenerator()),
+    new ImageConvertTool(),
 })
 {
     root.Add(tool.CreateCommand());
