@@ -10,7 +10,7 @@ namespace ImageConvert.Providors
         public static readonly Option<string[]> sourceOption = new Option<string[]>("-s", "--sources")
         {
             Description = "The source file, files or directory to convert from",
-            Required = true,
+            DefaultValueFactory = _ => ["./"],
             AllowMultipleArgumentsPerToken = true
         };
 
@@ -26,16 +26,15 @@ namespace ImageConvert.Providors
             DefaultValueFactory = _ => "./"
         };
 
-        public static readonly Option<string[]> nameOption = new Option<string[]>("-n", "--names")
+        public static readonly Option<bool> supportedFormatsOption = new Option<bool>("--supported")
         {
-            Description = "The names of the images to convert, default is the same as source name",
-            AllowMultipleArgumentsPerToken = true
+            Description = "Display the list of supported formats and unsupported options"
         };
 
         public static IList<Option> GetOptions()
         {
             var options = new List<Option>();
-            options.AddRange(sourceOption, formatOption, outputOption);
+            options.AddRange(sourceOption, formatOption, outputOption, supportedFormatsOption);
             return options;
         }
     }

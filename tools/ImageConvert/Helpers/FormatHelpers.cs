@@ -1,31 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
+﻿
 namespace ImageConvert.Helpers
 {
     public static class FormatHelpers
     {
+        internal static readonly HashSet<string> supportedOptions = new HashSet<string>
+        {
+            ".jpg", ".jpeg", ".png", ".heic"
+        };
+
+        /*
+         * heic: Unsupported due to copyright
+         */
+        internal static readonly HashSet<string> unsupportedOptions = new HashSet<string>
+        {
+            "heic"
+        };
+
         internal static bool FileIsSupportedFormat(string filepath)
         {
-            var supportedFormats = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
-            {
-                ".jpg", ".jpeg", ".png", ".heic"
-            };
             var fileExtension = Path.GetExtension(filepath);
-            return supportedFormats.Contains(fileExtension);
+            return supportedOptions.Contains(fileExtension.ToLowerInvariant());
         }
 
         internal static bool FormatIsUnsupportedForWrites(string format)
         {
-            /*
-             * heic: Unsupported due to copyright
-             */
-            var unsupportedFormats = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
-            {
-                "heic"
-            };
-            return unsupportedFormats.Contains(format.ToLowerInvariant());
+            return unsupportedOptions.Contains(format.ToLowerInvariant());
+        }
+
+        internal static void DisplaySupportedUnsupportedOptions(TextWriter output)
+        {
+            var supported = $"SUPPORTED OPTIONS\n-----------------\n{String.Join("\n", supportedOptions.ToList())}";
+            var unsupported = $"UNSUPPORTED TARGET OPTIONS\n--------------------------\n{String.Join("\n", unsupportedOptions.ToList())}";
+            output.WriteLine($"{supported}\n\n{unsupported}");
         }
     }
 }

@@ -22,8 +22,15 @@ namespace ImageConvert
                 var sources = parseResult.GetValue(OptionsProvider.sourceOption) ?? Array.Empty<string>();
                 var format = parseResult.GetValue(OptionsProvider.formatOption) ?? string.Empty;
                 var outputDirectory = parseResult.GetValue(OptionsProvider.outputOption) ?? "./";
+                var displaySupported = parseResult.GetValue(OptionsProvider.supportedFormatsOption);
                 var output = parseResult.InvocationConfiguration.Output;
                 var error = parseResult.InvocationConfiguration.Error;
+
+                if (displaySupported)
+                {
+                    DisplaySupportedUnsupportedOptions(output);
+                    return ExitCodes.Success;
+                }
 
                 if (FormatIsUnsupportedForWrites(format))
                 {
