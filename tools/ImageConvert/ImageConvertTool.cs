@@ -6,7 +6,7 @@ using ImageMagick;
 using Rw.Core.Helpers;
 using ImageConvert.Models;
 using Rw.Core.StaticValues;
-using System.Globalization;
+using static ImageConvert.Helpers.FormatHelpers;
 
 namespace ImageConvert
 {
@@ -39,90 +39,76 @@ namespace ImageConvert
                 }
 
                 // This will give us a set of expanded inputs on wildcard
-                // It will also return us just some folders still
+                // It will also return us just some folders
                 var expandedInputs = InputHelpers.ExpandWildcards(InputHelpers.NormaliseInputs(sources));
-
-                var imagesToProcess = new List<ImageToProcess>();
-
-                // Create the ImageToProcess objects for each folder
-                foreach (var input in expandedInputs)
-                {
-                    if (File.Exists(input))
-                    {
-                        // We have a file and can check if it is a supported format
-                        imagesToProcess.Add(new ImageToProcess
-                        {
-                            SourcePath = input,
-                            TargetPath = Path.GetFullPath(outputDirectory),
-                            OutputType = format,
-                        });
-                    }
-                    else if (Directory.Exists(input))
-                    {
-                        // We have a directory and we can find all image files in this directory
-                        foreach (var file in Directory.EnumerateFiles(input))
-                        {
-                            if (FileIsSupportedFormat(file))
-                            {
-                                imagesToProcess.Add(new ImageToProcess
-                                {
-                                    SourcePath = file,
-                                    TargetPath = Path.GetFullPath(outputDirectory),
-                                    OutputType = format,
-                                });
-                            }
-                        }
-                    }
-                }
-
+                var imagesToProcess = CreateImageToProcessObjects(expandedInputs, format, outputDirectory);
                 Directory.CreateDirectory(outputDirectory);
+                var failures = WriteNewImageFiles(imagesToProcess, magickFormat, error);
 
-                var failures = new List<string>();
-                int success = 0;
-                foreach (var image in imagesToProcess)
-                {
-                    try
-                    {
-                        using var mimage = new MagickImage(image.SourcePath);
-                        mimage.Write(image.FinalOutputPath, magickFormat);
-                        success++;
-                    }
-                    catch (Exception ex) when (ex is MagickException or IOException)
-                    {
-                        error.WriteLine($"Error: {image.SourcePath}: {ex.Message}");
-                        failures.Add(image.SourcePath);
-                    }
-                }
-
-                output.WriteLine($"Successfully converted {success} images");
+                // Output results
+                output.WriteLine($"Successfully converted {imagesToProcess.Count-failures.Count} images");
                 error.WriteLine($"Failed to convert {failures.Count}");
 
-                return ExitCodes.Success;
+                return (failures.Count > 0) ? ExitCodes.Failure : ExitCodes.Success;
             });
 
             return command;
         }
 
-        private static bool FileIsSupportedFormat(string filepath)
+        private static List<string> WriteNewImageFiles(List<ImageToProcess> imagesToProcess, MagickFormat magickFormat, TextWriter error)
         {
-            var supportedFormats = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+            var failures = new List<string>();
+            foreach (var image in imagesToProcess)
             {
-                ".jpg", ".jpeg", ".png", ".heic"
-            };
-            var fileExtension = Path.GetExtension(filepath);
-            return supportedFormats.Contains(fileExtension);
+                try
+                {
+                    using var mimage = new MagickImage(image.SourcePath);
+                    mimage.Write(image.FinalOutputPath, magickFormat);
+                }
+                catch (Exception ex) when (ex is MagickException or IOException)
+                {
+                    error.WriteLine($"Error: {image.SourcePath}: {ex.Message}");
+                    failures.Add(image.SourcePath);
+                }
+            }
+
+            return failures;
         }
 
-        private static bool FormatIsUnsupportedForWrites(string format)
+        private static List<ImageToProcess> CreateImageToProcessObjects(IEnumerable<string> expandedInputs, string format, string outputDirectory)
         {
-            /*
-             * heic: Unsupported due to copyright
-             */
-            var unsupportedFormats = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+            var imagesToProcess = new List<ImageToProcess>();
+
+            // Create the ImageToProcess objects for each folder
+            foreach (var input in expandedInputs)
             {
-                "heic"
-            };
-            return unsupportedFormats.Contains(format.ToLowerInvariant());
+                if (File.Exists(input) && FileIsSupportedFormat(input))
+                {
+                    imagesToProcess.Add(new ImageToProcess
+                    {
+                        SourcePath = input,
+                        TargetPath = Path.GetFullPath(outputDirectory),
+                        OutputType = format,
+                    });
+                }
+                else if (Directory.Exists(input))
+                {
+                    foreach (var file in Directory.EnumerateFiles(input))
+                    {
+                        if (FileIsSupportedFormat(file))
+                        {
+                            imagesToProcess.Add(new ImageToProcess
+                            {
+                                SourcePath = file,
+                                TargetPath = Path.GetFullPath(outputDirectory),
+                                OutputType = format,
+                            });
+                        }
+                    }
+                }
+            }
+
+            return imagesToProcess;
         }
     }
 }
