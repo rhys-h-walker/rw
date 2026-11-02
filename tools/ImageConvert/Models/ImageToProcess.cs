@@ -18,7 +18,14 @@ namespace ImageConvert.Models
         {
             get
             {
-                return Path.Combine(TargetPath, FileName) + $".{OutputType}";
+                int tryCounter = 0;
+                var finalPath = Path.Combine(TargetPath, FileName) + $".{OutputType}";
+                while (Path.Exists(finalPath))
+                {
+                    finalPath = Path.Combine(TargetPath, FileName) + $"({tryCounter}).{OutputType}";
+                    tryCounter++;
+                }
+                return finalPath;
             }
         }
     }

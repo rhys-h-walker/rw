@@ -5,6 +5,8 @@ using System.CommandLine;
 using ImageMagick;
 using Rw.Core.Helpers;
 using ImageConvert.Models;
+using Rw.Core.StaticValues;
+using System.Globalization;
 
 namespace ImageConvert
 {
@@ -23,11 +25,17 @@ namespace ImageConvert
                 var output = parseResult.InvocationConfiguration.Output;
                 var error = parseResult.InvocationConfiguration.Error;
 
+                if (FormatIsUnsupportedForWrites(format))
+                {
+                    error.WriteLine($"The format {format} is unsupported for writes");
+                    return ExitCodes.Failure;
+                }
+
                 // Get the output format specified
                 if (!Enum.TryParse<MagickFormat>(format, ignoreCase: true, out var magickFormat))
                 {
                     error.WriteLine($"Unknown format: {format}");
-                    return;
+                    return ExitCodes.Failure;
                 }
 
                 // This will give us a set of expanded inputs on wildcard
@@ -36,15 +44,7 @@ namespace ImageConvert
 
                 var imagesToProcess = new List<ImageToProcess>();
 
-                /*
-                 * 2 modes:
-                 * Check if each input is a folder or a file
-                 * 
-                 * If file:
-                 *      - Check it is supported format
-                 *      - Convert to a Path obejct and save
-                 *      
-                 */
+                // Create the ImageToProcess objects for each folder
                 foreach (var input in expandedInputs)
                 {
                     if (File.Exists(input))
@@ -96,6 +96,8 @@ namespace ImageConvert
 
                 output.WriteLine($"Successfully converted {success} images");
                 error.WriteLine($"Failed to convert {failures.Count}");
+
+                return ExitCodes.Success;
             });
 
             return command;
@@ -109,6 +111,18 @@ namespace ImageConvert
             };
             var fileExtension = Path.GetExtension(filepath);
             return supportedFormats.Contains(fileExtension);
+        }
+
+        private static bool FormatIsUnsupportedForWrites(string format)
+        {
+            /*
+             * heic: Unsupported due to copyright
+             */
+            var unsupportedFormats = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+            {
+                "heic"
+            };
+            return unsupportedFormats.Contains(format.ToLowerInvariant());
         }
     }
 }
