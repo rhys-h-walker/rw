@@ -1,8 +1,10 @@
 <Solution>
   <Folder Name="/Solution Items/">
     <File Path=".gitignore" />
+    <File Path=".gitlab-ci.yml" />
     <File Path="Directory.Build.props" />
     <File Path="Directory.Packages.props" />
+    <File Path="README.md" />
   </Folder>
   <Folder Name="/installer/" />
   <Folder Name="/installer/linux/">
@@ -14,20 +16,20 @@
     <File Path="installer/windows/Product.wxs" />
   </Folder>
   <Folder Name="/src/">
-    <Project Path="src/Rw.Core/Rw.Core.csproj" />
-    <Project Path="src/Rw/Rw.csproj" />
+    <Project Path="./src/Rw.Core/Rw.Core.csproj" />
+    <Project Path="./src/Rw/Rw.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <File Path="tests/.editorconfig" />
-    <Project Path="tests/GuidMaker.Tests/GuidMaker.Tests.csproj" />
-    <Project Path="tests/HelloWorld.Tests/HelloWorld.Tests.csproj" />
-    <Project Path="tests/Rw.Tests/Rw.Tests.csproj" />
-    <Project Path="tests/Uninstall.Tests/Uninstall.Tests.csproj" />
+    <Project Path="./tests/GuidMaker.Tests/GuidMaker.Tests.csproj" />
+    <Project Path="./tests/HelloWorld.Tests/HelloWorld.Tests.csproj" />
+    <Project Path="./tests/Rw.Tests/Rw.Tests.csproj" />
+    <Project Path="./tests/Uninstall.Tests/Uninstall.Tests.csproj" />
   </Folder>
   <Folder Name="/tools/">
-    <Project Path="tools/GuidMaker/GuidMaker.csproj" />
-    <Project Path="tools/HelloWorld/HelloWorld.csproj" />
-    <Project Path="tools/ImageConvert/ImageConvert.csproj" />
-    <Project Path="tools/Uninstall/Uninstall.csproj" />
+    <Project Path="./tools/GuidMaker/GuidMaker.csproj" />
+    <Project Path="./tools/HelloWorld/HelloWorld.csproj" />
+    <Project Path="./tools/ImageConvert/ImageConvert.csproj" />
+    <Project Path="./tools/Uninstall/Uninstall.csproj" />
   </Folder>
 </Solution>
