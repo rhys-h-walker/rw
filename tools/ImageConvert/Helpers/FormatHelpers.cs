@@ -11,7 +11,7 @@ namespace ImageConvert.Helpers
         /*
          * heic: Unsupported due to copyright
          */
-        internal static readonly HashSet<string> unsupportedOptions = new HashSet<string>
+        internal static readonly HashSet<string> unsupportedTargets = new HashSet<string>
         {
             "heic"
         };
@@ -24,14 +24,19 @@ namespace ImageConvert.Helpers
 
         internal static bool FormatIsUnsupportedForWrites(string format)
         {
-            return unsupportedOptions.Contains(format.ToLowerInvariant());
+            return unsupportedTargets.Contains(format.ToLowerInvariant().ReplaceDot());
         }
 
         internal static void DisplaySupportedUnsupportedOptions(TextWriter output)
         {
             var supported = $"SUPPORTED OPTIONS\n-----------------\n{String.Join("\n", supportedOptions.ToList())}";
-            var unsupported = $"UNSUPPORTED TARGET OPTIONS\n--------------------------\n{String.Join("\n", unsupportedOptions.ToList())}";
+            var unsupported = $"UNSUPPORTED TARGET OPTIONS\n--------------------------\n{String.Join("\n", unsupportedTargets.ToList())}";
             output.WriteLine($"{supported}\n\n{unsupported}");
+        }
+
+        private static string ReplaceDot(this string input)
+        {
+            return input.Replace(".", "");
         }
     }
 }
