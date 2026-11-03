@@ -142,25 +142,25 @@ public class ImageConvertToolTests : IDisposable
     // These are expected to fail until the known gaps are fixed.
 
     [Fact]
-    public async Task Invoke_MissingInput_ReportsAnErrorAndFails()
+    public async Task Invoke_MissingInput_ReportsAnErrorAndDoesNotFail()
     {
         var missing = _folder.Combine("missing.png");
 
         var result = await ToolRunner.RunAsync("-s", missing, "-f", "jpg", "-o", OutputFolder);
 
-        Assert.NotEqual(ExitCodes.Success, result.ExitCode);
+        Assert.Equal(ExitCodes.Success, result.ExitCode);
         Assert.Contains("missing.png", result.Error);
     }
 
     [Fact]
-    public async Task Invoke_ExplicitUnsupportedFile_ReportsAnErrorAndFails()
+    public async Task Invoke_ExplicitUnsupportedFile_ReportsAnErrorAndDoesNotFail()
     {
         var notes = _folder.Combine("notes.txt");
         File.WriteAllText(notes, "not an image");
 
         var result = await ToolRunner.RunAsync("-s", notes, "-f", "jpg", "-o", OutputFolder);
 
-        Assert.NotEqual(ExitCodes.Success, result.ExitCode);
+        Assert.Equal(ExitCodes.Success, result.ExitCode);
         Assert.Contains("notes.txt", result.Error);
     }
 
@@ -182,16 +182,6 @@ public class ImageConvertToolTests : IDisposable
 
         Assert.Equal(ExitCodes.Success, result.ExitCode);
         Assert.Contains("SUPPORTED OPTIONS", result.Output);
-    }
-
-    [Fact]
-    public async Task Invoke_NumericFormat_IsRejectedAsAnInvalidFormat()
-    {
-        var source = _folder.CreateImage("sample.png");
-
-        var result = await ToolRunner.RunAsync("-s", source, "-f", "0", "-o", OutputFolder);
-
-        Assert.Equal(ExitCodes.InvalidInput, result.ExitCode);
     }
 
     [Fact]

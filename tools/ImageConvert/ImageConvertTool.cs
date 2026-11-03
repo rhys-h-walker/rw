@@ -40,19 +40,19 @@ namespace ImageConvert
                 if (string.IsNullOrWhiteSpace(format))
                 {
                     Error.WriteLine("Format was empty exiting");
-                    return ExitCodes.Failure;
+                    return ExitCodes.InvalidInput;
                 }
 
                 if (FormatIsUnsupportedForWrites(format))
                 {
                     Error.WriteLine($"The format {format} is unsupported for writes");
-                    return ExitCodes.Failure;
+                    return ExitCodes.InvalidInput;
                 }
 
                 if (!Enum.TryParse<MagickFormat>(format, ignoreCase: true, out var magickFormat))
                 {
                     Error.WriteLine($"Unknown format: {format}");
-                    return ExitCodes.Failure;
+                    return ExitCodes.InvalidInput;
                 }
 
                 // This will give us a set of expanded inputs on wildcard
@@ -66,7 +66,15 @@ namespace ImageConvert
                     return ExitCodes.Success;
                 }
 
-                Directory.CreateDirectory(outputDirectory);
+                try
+                {
+                    Directory.CreateDirectory(outputDirectory);
+                }
+                catch (Exception ex)
+                {
+                    Error.WriteLine("Error creating output directory: " + ex.Message);
+                }
+
                 Failures = WriteNewImageFiles(imagesToProcess, magickFormat);
 
                 // Output results
@@ -137,6 +145,11 @@ namespace ImageConvert
                             });
                         }
                     }
+                }
+                else
+                {
+                    if (Error == null) continue;
+                    Error.WriteLine($"{input} does not exist as a directory or a file");
                 }
             }
 
