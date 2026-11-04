@@ -73,6 +73,7 @@ namespace ImageConvert
                 catch (Exception ex)
                 {
                     Error.WriteLine("Error creating output directory: " + ex.Message);
+                    return ExitCodes.Failure;
                 }
 
                 Failures = WriteNewImageFiles(imagesToProcess, magickFormat);
