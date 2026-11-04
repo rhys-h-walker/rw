@@ -43,6 +43,16 @@ namespace ImageConvert
                     return ExitCodes.InvalidInput;
                 }
 
+                try
+                {
+                    Path.GetFullPath(outputDirectory);
+                }
+                catch (Exception ex)
+                {
+                    Error.WriteLine("Error getting full path for output directory: " + ex.Message);
+                    return ExitCodes.Failure;
+                }
+
                 if (FormatIsUnsupportedForWrites(format))
                 {
                     Error.WriteLine($"The format {format} is unsupported for writes");
