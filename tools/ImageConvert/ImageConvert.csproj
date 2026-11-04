@@ -2,6 +2,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\src\Rw.Core\Rw.Core.csproj" />
+		<PackageReference Include="Magick.NET-Q16-AnyCPU" />
 	</ItemGroup>
 
 </Project>
