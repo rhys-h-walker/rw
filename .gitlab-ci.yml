@@ -42,7 +42,7 @@ build:
       - .nuget/
   before_script:
     - apt-get update -qq
-    - apt-get install -y -qq msitools
+    - apt-get install -y -qq wixl
   script:
     - bash installer/build-release.sh "$RELEASE_VERSION"
   artifacts:
