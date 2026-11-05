@@ -3,6 +3,8 @@
   WiX 3 schema for msitools' wixl, which runs on Linux. Product.wxs is the WiX v4 version for Windows.
   Keep the UpgradeCode and component GUIDs identical to Product.wxs so the two can upgrade each other.
   build-release.sh replaces @VERSION@ and @PAYLOAD@ before wixl runs.
+  wixl does not support Platform, InstallPrivileges or the Environment element. add-path.sh adds the PATH entry
+  after wixl builds the MSI, and Product.wxs has the same entry for the WiX v4 build.
 -->
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <Product Id="*"
@@ -14,9 +16,7 @@
 
     <Package InstallerVersion="500"
              Compressed="yes"
-             Platform="x64"
-             InstallScope="perUser"
-             InstallPrivileges="limited" />
+             InstallScope="perUser" />
 
     <MajorUpgrade DowngradeErrorMessage="A newer version of rw is already installed." />
     <MediaTemplate EmbedCab="yes" />
@@ -34,7 +34,6 @@
         <File Id="RwExeFile" Source="@PAYLOAD@/rw.exe" />
         <!-- Per-user components need an HKCU key path (ICE38). -->
         <RegistryValue Root="HKCU" Key="Software\rw" Name="Installed" Type="integer" Value="1" KeyPath="yes" />
-        <Environment Id="RwPath" Name="PATH" Value="[INSTALLFOLDER]" Action="set" Part="last" System="no" />
         <RemoveFolder Id="RemoveInstallFolder" On="uninstall" />
       </Component>
     </DirectoryRef>

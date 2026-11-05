@@ -7,7 +7,7 @@
 #   SHA256SUMS                    checksums of the four files above
 # Usage: build-release.sh <version>
 #   version  e.g. 0.2.0, v0.2.0 or 0.2.0-beta1 (a leading v is dropped)
-# Needs the .NET SDK, dpkg-deb, and wixl (Debian package msitools).
+# Needs the .NET SDK, dpkg-deb, wixl, and msitools (msibuild and msiinfo, used by add-path.sh).
 set -euo pipefail
 
 raw="${1:?usage: build-release.sh <version>}"
@@ -43,6 +43,7 @@ wxs="$out/Product.wxs"
 sed -e "s|@VERSION@|$msi_version|" -e "s|@PAYLOAD@|$payload/win-x64|" \
     "$here/windows/Product.wixl.wxs" > "$wxs"
 wixl -v -o "$out/rw-$version.msi" "$wxs"
+bash "$here/windows/add-path.sh" "$out/rw-$version.msi" RwExe
 
 deb="rw_${deb_version}_amd64.deb"
 rm -rf "$payload" "$wxs" "$repo/dist/deb-staging"

@@ -16,6 +16,7 @@
     <File Path="installer/linux/copyright" />
   </Folder>
   <Folder Name="/installer/windows/">
+    <File Path="installer/windows/add-path.sh" />
     <File Path="installer/windows/Product.wixl.wxs" />
     <File Path="installer/windows/Product.wxs" />
   </Folder>
