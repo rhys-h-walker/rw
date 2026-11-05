@@ -37,7 +37,7 @@ done
 cp "$payload/linux-x64/rw" "$out/rw-$version-linux-x64"
 cp "$payload/win-x64/rw.exe" "$out/rw-$version-win-x64.exe"
 
-"$here/linux/build-deb.sh" "$version" "$payload/linux-x64" "$out"
+bash "$here/linux/build-deb.sh" "$version" "$payload/linux-x64" "$out"
 
 wxs="$out/Product.wxs"
 sed -e "s|@VERSION@|$msi_version|" -e "s|@PAYLOAD@|$payload/win-x64|" \
