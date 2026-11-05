@@ -1,7 +1,6 @@
 stages:
   - test
-  - build
-  - publish
+  - release
 
 test:
   stage: test
@@ -27,9 +26,10 @@ test:
     - if: $CI_COMMIT_BRANCH || $CI_COMMIT_TAG
 
 # Start from New pipeline with the variable RELEASE_VERSION, for example 0.2.0 or v0.2.0-beta1. The branch you
-# choose is the one that gets tagged, so pick master for a real release.
-build:
-  stage: build
+# choose is the one that gets tagged, so pick master for a real release. The files go straight to the GitLab package
+# registry rather than job artifacts, because the total is larger than the instance accepts for artifacts.
+release:
+  stage: release
   image: mcr.microsoft.com/dotnet/sdk:10.0
   variables:
     DOTNET_NOLOGO: "1"
@@ -42,27 +42,9 @@ build:
       - .nuget/
   before_script:
     - apt-get update -qq
-    - apt-get install -y -qq wixl msitools
+    - apt-get install -y -qq wixl msitools curl jq
   script:
     - bash installer/build-release.sh "$RELEASE_VERSION"
-  artifacts:
-    paths:
-      - dist/
-    expire_in: 30 days
-  rules:
-    - if: $RELEASE_VERSION
-
-publish:
-  stage: publish
-  image: mcr.microsoft.com/dotnet/sdk:10.0
-  variables:
-    DEBIAN_FRONTEND: "noninteractive"
-  needs:
-    - build
-  before_script:
-    - apt-get update -qq
-    - apt-get install -y -qq curl jq
-  script:
     - bash installer/publish-gitlab-release.sh "$RELEASE_VERSION"
   rules:
     - if: $RELEASE_VERSION
