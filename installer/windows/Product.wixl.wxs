@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  WiX 3 schema for msitools' wixl, which runs on Linux. Product.wxs is the WiX v4 version for Windows.
+  Keep the UpgradeCode and component GUIDs identical to Product.wxs so the two can upgrade each other.
+  build-release.sh replaces @VERSION@ and @PAYLOAD@ before wixl runs.
+-->
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Product Id="*"
+           Name="rw"
+           Language="1033"
+           Version="@VERSION@"
+           Manufacturer="Rhys Walker"
+           UpgradeCode="329FC5E3-3980-4273-BB2A-9DCB42717E89">
+
+    <Package InstallerVersion="500"
+             Compressed="yes"
+             Platform="x64"
+             InstallScope="perUser"
+             InstallPrivileges="limited" />
+
+    <MajorUpgrade DowngradeErrorMessage="A newer version of rw is already installed." />
+    <MediaTemplate EmbedCab="yes" />
+
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="LocalAppDataFolder">
+        <Directory Id="ProgramsFolder" Name="Programs">
+          <Directory Id="INSTALLFOLDER" Name="rw" />
+        </Directory>
+      </Directory>
+    </Directory>
+
+    <DirectoryRef Id="INSTALLFOLDER">
+      <Component Id="RwExe" Guid="E18EAC76-52CA-4795-94B4-3A01DB8530B0">
+        <File Id="RwExeFile" Source="@PAYLOAD@/rw.exe" />
+        <!-- Per-user components need an HKCU key path (ICE38). -->
+        <RegistryValue Root="HKCU" Key="Software\rw" Name="Installed" Type="integer" Value="1" KeyPath="yes" />
+        <Environment Id="RwPath" Name="PATH" Value="[INSTALLFOLDER]" Action="set" Part="last" System="no" />
+        <RemoveFolder Id="RemoveInstallFolder" On="uninstall" />
+      </Component>
+    </DirectoryRef>
+
+    <Feature Id="Main" Title="rw" Level="1">
+      <ComponentRef Id="RwExe" />
+    </Feature>
+  </Product>
+</Wix>

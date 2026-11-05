@@ -6,13 +6,17 @@
     <File Path="Directory.Packages.props" />
     <File Path="README.md" />
   </Folder>
-  <Folder Name="/installer/" />
+  <Folder Name="/installer/">
+    <File Path="installer/build-release.sh" />
+    <File Path="installer/publish-gitlab-release.sh" />
+  </Folder>
   <Folder Name="/installer/linux/">
     <File Path="installer/linux/build-deb.sh" />
     <File Path="installer/linux/control.template" />
     <File Path="installer/linux/copyright" />
   </Folder>
   <Folder Name="/installer/windows/">
+    <File Path="installer/windows/Product.wixl.wxs" />
     <File Path="installer/windows/Product.wxs" />
   </Folder>
   <Folder Name="/src/">
