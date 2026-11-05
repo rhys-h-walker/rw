@@ -18,7 +18,8 @@ msibuild "$msi" -i "$work/Environment.idt"
 # InstallExecuteSequence already holds wixl's rows, and msibuild -i replaces a whole table, so export it, append the
 # two actions unless they are already there, and import it back.
 msiinfo export "$msi" InstallExecuteSequence > "$work/InstallExecuteSequence.idt"
-for action in "WriteEnvironmentStrings 4550" "RemoveEnvironmentStrings 650"; do
+# RemoveEnvironmentStrings must run after CostFinalize, which is what sets the Component Action column its query uses.
+for action in "WriteEnvironmentStrings 4550" "RemoveEnvironmentStrings 4050"; do
     name="${action% *}"
     sequence="${action#* }"
     if ! grep -q "^$name	" "$work/InstallExecuteSequence.idt"; then
