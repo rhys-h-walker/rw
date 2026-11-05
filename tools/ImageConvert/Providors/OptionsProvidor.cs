@@ -31,10 +31,16 @@ namespace ImageConvert.Providors
             Description = "Display the list of supported formats and unsupported options"
         };
 
+        public static readonly Option<bool> macOsFilterOption = new Option<bool>("--macos-filter-off")
+        {
+            Description = "Disable the macOS filter, this filters out iphone companion files that beign with ._IMGNAME.HEIC for example",
+            DefaultValueFactory = _ => false
+        };
+
         public static IList<Option> GetOptions()
         {
             var options = new List<Option>();
-            options.AddRange(sourceOption, formatOption, outputOption, supportedFormatsOption);
+            options.AddRange(sourceOption, formatOption, outputOption, supportedFormatsOption, macOsFilterOption);
             return options;
         }
     }

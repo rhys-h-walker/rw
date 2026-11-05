@@ -7,7 +7,6 @@ using Rw.Core.Helpers;
 using ImageConvert.Models;
 using Rw.Core.StaticValues;
 using static ImageConvert.Helpers.FormatHelpers;
-using System.Reflection.Metadata.Ecma335;
 
 namespace ImageConvert
 {
@@ -16,6 +15,7 @@ namespace ImageConvert
         private TextWriter? Error;
         private TextWriter? Output;
         private List<string> Failures = new List<string>();
+        private bool MacOsFilterEnabled;
 
         public Command CreateCommand()
         {
@@ -28,6 +28,7 @@ namespace ImageConvert
                 var format = parseResult.GetValue(OptionsProvider.formatOption) ?? string.Empty;
                 var outputDirectory = parseResult.GetValue(OptionsProvider.outputOption) ?? "./";
                 var displaySupported = parseResult.GetValue(OptionsProvider.supportedFormatsOption);
+                MacOsFilterEnabled = !parseResult.GetValue(OptionsProvider.macOsFilterOption); // Flipped for ease on this side
                 Output = parseResult.InvocationConfiguration.Output;
                 Error = parseResult.InvocationConfiguration.Error;
 
@@ -118,6 +119,19 @@ namespace ImageConvert
             return Failures;
         }
 
+        private bool MacOsFilter(string filePath)
+        {
+            if (MacOsFilterEnabled == false) return false;
+
+            var fileName = Path.GetFileName(filePath);
+            if (fileName.StartsWith("._", System.StringComparison.InvariantCultureIgnoreCase))
+            {
+                Output?.WriteLine($"Filtered out macOS companion file: {filePath}");
+                return true;
+            }
+            return false;
+        }
+
         private List<ImageToProcess> CreateImageToProcessObjects(IEnumerable<string> expandedInputs, string format, string outputDirectory)
         {
             var imagesToProcess = new List<ImageToProcess>();
@@ -129,9 +143,13 @@ namespace ImageConvert
                 {
                     if (FileIsSupportedFormat(input) == false)
                     {
-                        if (Error == null) continue;
-                        Error.WriteLine($"File: {input} is unsupported");
+                        Error?.WriteLine($"File: {input} is unsupported");
                         Failures.Add(input);
+                        continue;
+                    }
+
+                    if (MacOsFilter(input))
+                    {
                         continue;
                     }
 
@@ -148,6 +166,11 @@ namespace ImageConvert
                     {
                         if (FileIsSupportedFormat(file))
                         {
+                            if (MacOsFilter(file))
+                            {
+                                continue;
+                            }
+
                             imagesToProcess.Add(new ImageToProcess
                             {
                                 SourcePath = file,
@@ -159,8 +182,7 @@ namespace ImageConvert
                 }
                 else
                 {
-                    if (Error == null) continue;
-                    Error.WriteLine($"{input} does not exist as a directory or a file");
+                    Error?.WriteLine($"{input} does not exist as a directory or a file");
                 }
             }
 
